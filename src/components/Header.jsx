@@ -3,7 +3,15 @@ import User from "../assets/img/user.jpg";
 import "../assets/css/style.css";
 import "../assets/css/style1.css";
 import { NavLink } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logoutUser } from "../Redux/Auth/authAction";
 function Header() {
+
+
+  const dispatch =useDispatch();
+  const logoutHandle = () => {
+    dispatch(logoutUser());
+  }
   return (
     <nav className="navbar navbar-expand-lg">
       <div className="containerss">
@@ -97,9 +105,9 @@ function Header() {
                 <NavLink className="dropdown-item" to="/profile">
                   Profile
                 </NavLink>
-                <NavLink className="dropdown-item" to="/login">
+                <button onClick={logoutHandle} className="dropdown-item" >
                   Logout
-                </NavLink>
+                </button>
               </div>
             </li>
             {/* <li className="nav-item">

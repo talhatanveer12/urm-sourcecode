@@ -17,6 +17,19 @@ export const loginUser = (data) => async (dispatch) => {
   }
 };
 
+export const SignUpUser = (data) => async (dispatch) => {
+  try {
+    const res = await axiosInstance.post("/auth/resigter", data);
+    if (res.data.status === true) {
+      dispatch(login({ token: res.data.token, user: res.data.data }));
+    }
+    return res;
+  } catch (error) {
+    
+    return error.response;
+  }
+};
+
 export const loadUser = () => async (dispatch) => {
   dispatch(catchAction(true));
   try {

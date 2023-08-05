@@ -1,8 +1,10 @@
 import Logo from "../../assets/img/logo.jpg";
 import "../../assets/css/style.css";
 import "../../assets/css/style1.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { SignUpUser } from "../../Redux/Auth/authAction";
 const initvalue = {
   username: "",
   email: "",
@@ -13,10 +15,53 @@ const initvalue = {
 function Register() {
   const [selected,setSelected] = useState(1);
   const [formData, setFormData] = useState(initvalue);
+  const [error, setError] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Here you can perform any action with the form data, e.g., send it to a server
+    const formDataToSend = new FormData();
+
+  // Set common fields to formDataToSend
+  formDataToSend.append('username', formData.username);
+  formDataToSend.append('email', formData.email);
+  formDataToSend.append('password', formData.password);
+  formDataToSend.append('address', formData.address);
+  formDataToSend.append('dob', formData.dob);
+  formDataToSend.append('role', selected);
+
+  // Check the selected role and set the role-specific fields
+  if (selected === "2") {
+    formDataToSend.append('firstName', formData.firstName);
+    formDataToSend.append('lastName', formData.lastName);
+    formDataToSend.append('nationality', formData.nationality);
+    formDataToSend.append('ethnicity', formData.ethnicity);
+    formDataToSend.append('education', formData.education);
+    formDataToSend.append('researchExperience', formData.researchExperience);
+    formDataToSend.append('phoneNo', formData.phoneNo);
+  } else if (selected === "3") {
+    formDataToSend.append('institutionName', formData.institutionName);
+    formDataToSend.append('institutionAddress', formData.institutionAddress);
+    formDataToSend.append('phoneNo', formData.phoneNo);
+  } else if (selected === "4") {
+    formDataToSend.append('companyName', formData.companyName);
+    formDataToSend.append('companyAddress', formData.companyAddress);
+    formDataToSend.append('phoneNo', formData.phoneNo);
+  } else if (selected === "5") {
+    formDataToSend.append('organizationName', formData.organizationName);
+    formDataToSend.append('organizationAddress', formData.organizationAddress);
+    formDataToSend.append('phoneNo', formData.phoneNo);
+  }
+
+  dispatch(SignUpUser(formDataToSend)).then((res) => {
+    console.log(res, "ssc");
+    if (res.data.status === true) {
+      navigate("/");
+    } else {
+      setError(res.data.message);
+    }
+  });
     console.log(formData);
   };
 
